@@ -1,19 +1,28 @@
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestionPropiedadesAgricolas.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class PropiedadesAgricolasController : ControllerBase
     {
+      //# Entidades para scaffold de AutoController:
+      //- Propietario
+      //- PropiedadAgrícola
+      //- Parcela
+      //- Cultivo
+      //- Usuario
+      //- Trabajador
+      //- Ubicación
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<PropiedadesAgricolasController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public PropiedadesAgricolasController(ILogger<PropiedadesAgricolasController> logger)
         {
             _logger = logger;
         }
@@ -29,5 +38,6 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             })
             .ToArray();
         }
+
     }
 }

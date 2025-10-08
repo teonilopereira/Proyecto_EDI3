@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Abstactions\GestionPropiedadesAgricolas.Abstactions.csproj" />
+  </ItemGroup>
+
 </Project>
