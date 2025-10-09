@@ -33,7 +33,7 @@ namespace GestionPropiedadesAgricolas.Entities
         public string Estado { get; set; }
         public int IdPropietario { get; set; }
         public virtual Propietario Propietario { get; set; }
-        public int UbicacionId { get; set; }
+        public int IdUbicacion { get; set; }
         public virtual Ubicacion Ubicacion { get; set; }
         public virtual ICollection<ProveedorPorPropiedadAgricola> ProveedoresPorPropiedadesAgricolas { get; set; }
         public virtual ICollection<UsuarioPorPropiedadAgricola> UsuariosPorPropiedadAgricolas { get; set; }
