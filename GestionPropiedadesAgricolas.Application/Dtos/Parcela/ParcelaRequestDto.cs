@@ -10,7 +10,6 @@ namespace GestionPropiedadesAgricolas.Application.Dtos.Parcela
         public int PropiedadAgricolaId { get; set; }
         [StringLength(30)]
         public string CodigoParcela { get; set; }
-        [StringLength(100)]
         public double Superficie { get; set; }
         [StringLength(50)]
         public string? Nombre { get; set; }

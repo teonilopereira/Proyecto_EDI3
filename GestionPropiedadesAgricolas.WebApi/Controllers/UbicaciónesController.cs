@@ -1,4 +1,6 @@
-﻿using GestionPropiedadesAgricolas.Application;
+﻿using AutoMapper;
+using GestionPropiedadesAgricolas.Application;
+using GestionPropiedadesAgricolas.Application.Dtos.Ubicacion;
 using GestionPropiedadesAgricolas.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,16 +12,18 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
     {
         private readonly ILogger<UbicacionesController> _logger;
         private readonly IApplication<Ubicacion> _ubicacion;
-        public UbicacionesController(ILogger<UbicacionesController> logger, IApplication<Ubicacion> ubicacion)
+        private readonly IMapper _mapper;
+        public UbicacionesController(ILogger<UbicacionesController> logger, IApplication<Ubicacion> ubicacion, IMapper mapper)
         {
             _logger = logger;
             _ubicacion = ubicacion;
+            _mapper = mapper;
         }
         [HttpGet]
         [Route("All")]
         public async Task<IActionResult> All()
         {
-            return Ok(_ubicacion.GetAll());
+            return Ok(_mapper.Map<IList<UbicacionResponseDto>>(_ubicacion.GetAll()));
         }
         [HttpGet]
         [Route("ById")]
@@ -34,31 +38,32 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(ubicacion);
+            return Ok(_mapper.Map<UbicacionResponseDto>(ubicacion));
         }
         [HttpPost]
-        public async Task<IActionResult> Crear(Ubicacion ubicacion)
+        public async Task<IActionResult> Crear(UbicacionRequestDto ubicacionRequestDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
+            var ubicacion = _mapper.Map<Ubicacion>(ubicacionRequestDto);
             _ubicacion.Save(ubicacion);
             return Ok(ubicacion.Id);
         }
         [HttpPut]
-        public async Task<IActionResult> Editar(int? Id, Ubicacion ubicacion)
+        public async Task<IActionResult> Editar(int? Id, UbicacionRequestDto ubicacionRequestDto)
         {
-            if (!Id.HasValue){return BadRequest();}
-            if(!ModelState.IsValid){return BadRequest(ModelState);}
+            if (!Id.HasValue)
+            { return BadRequest(); }
+            if (!ModelState.IsValid)
+            { return BadRequest(); }
             Ubicacion ubicacionBack = _ubicacion.GetById(Id.Value);
-            if (ubicacionBack is null){return NotFound();}
-            ubicacionBack.Direccion = ubicacion.Direccion;
-            ubicacionBack.Localidad = ubicacion.Localidad;
-            ubicacionBack.Provincia = ubicacion.Provincia;
-            ubicacionBack.CodigoPostal = ubicacion.CodigoPostal;
+            if (ubicacionBack is null)
+            { return NotFound(); }
+            ubicacionBack = _mapper.Map<Ubicacion>(ubicacionRequestDto);
             _ubicacion.Save(ubicacionBack);
-            return Ok(ubicacionBack);
+            return Ok();
         }
 
         [HttpDelete]

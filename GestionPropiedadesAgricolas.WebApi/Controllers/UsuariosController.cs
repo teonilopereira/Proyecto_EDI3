@@ -1,4 +1,6 @@
-﻿using GestionPropiedadesAgricolas.Application;
+﻿using AutoMapper;
+using GestionPropiedadesAgricolas.Application;
+using GestionPropiedadesAgricolas.Application.Dtos.Usuario;
 using GestionPropiedadesAgricolas.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +12,20 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
         {
             private readonly ILogger<UsuariosController> _logger;
             private readonly IApplication<Usuario> _usuario;
+        private readonly IMapper _mapper;
 
-            public UsuariosController(ILogger<UsuariosController> logger, IApplication<Usuario> usuario)
+        public UsuariosController(ILogger<UsuariosController> logger, IApplication<Usuario> usuario, IMapper mapper)
             {
                 _logger = logger;
                 _usuario = usuario;
-            }
+                _mapper = mapper;
+        }
 
             [HttpGet]
             [Route("All")]
             public async Task<IActionResult> All()
             {
-                return Ok(_usuario.GetAll());
+                return Ok(_mapper.Map<IList<UsuarioResponseDto>>(_usuario.GetAll()));
             }
 
             [HttpGet]
@@ -40,51 +44,35 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
                     return NotFound();
                 }
 
-                return Ok(usuario);
+                return Ok(_mapper.Map<UsuarioResponseDto>(usuario));
             }
 
             [HttpPost]
-            public async Task<IActionResult> Crear(Usuario usuario)
+            public async Task<IActionResult> Crear(UsuarioRequestDto usuarioRequestDto)
             {
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
-
-                _usuario.Save(usuario);
+            var usuario = _mapper.Map<Usuario>(usuarioRequestDto);
+            _usuario.Save(usuario);
                 return Ok(usuario.Id);
             }
 
             [HttpPut]
-            public async Task<IActionResult> Editar(int? Id, Usuario usuario)
+            public async Task<IActionResult> Editar(int? Id, UsuarioRequestDto usuarioRequestDto)
             {
-                if (!Id.HasValue)
-                {
-                    return BadRequest();
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                Usuario usuarioBack = _usuario.GetById(Id.Value);
-
-                if (usuarioBack is null)
-                {
-                    return NotFound();
-                }
-
-                usuarioBack.Nombre = usuario.Nombre;
-                usuarioBack.Email = usuario.Email;
-                usuarioBack.RolGlobal = usuario.RolGlobal;
-                usuarioBack.Telefono = usuario.Telefono;
-                usuarioBack.UltimoAcceso = usuario.UltimoAcceso;
-                usuarioBack.Estado = usuario.Estado;
-
-                _usuario.Save(usuarioBack);
-                return Ok(usuarioBack);
-            }
+            if (!Id.HasValue)
+            { return BadRequest(); }
+            if (!ModelState.IsValid)
+            { return BadRequest(); }
+            Usuario usuarioBack = _usuario.GetById(Id.Value);
+            if (usuarioBack is null)
+            { return NotFound(); }
+            usuarioBack = _mapper.Map<Usuario>(usuarioRequestDto);
+            _usuario.Save(usuarioBack);
+            return Ok();
+        }
 
             [HttpDelete]
             public async Task<IActionResult> Borrar(int? Id)
@@ -93,14 +81,11 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
                 {
                     return BadRequest();
                 }
-
                 Usuario usuarioBack = _usuario.GetById(Id.Value);
-
                 if (usuarioBack is null)
                 {
                     return NotFound();
                 }
-
                 _usuario.Delete(usuarioBack.Id);
                 return Ok();
             }

@@ -1,4 +1,6 @@
-﻿using GestionPropiedadesAgricolas.Application;
+﻿using AutoMapper;
+using GestionPropiedadesAgricolas.Application;
+using GestionPropiedadesAgricolas.Application.Dtos.Trabajador;
 using GestionPropiedadesAgricolas.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,16 +12,18 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
     {
         private readonly ILogger<TrabajadoresController> _logger;
         private readonly IApplication<Trabajador> _trabajador;
-        public TrabajadoresController(ILogger<TrabajadoresController> logger, IApplication<Trabajador> trabajador)
+        private readonly IMapper _mapper;
+        public TrabajadoresController(ILogger<TrabajadoresController> logger, IApplication<Trabajador> trabajador, IMapper mapper)
         {
             _logger = logger;
             _trabajador = trabajador;
+            _mapper = mapper;
         }
         [HttpGet]
         [Route("All")]
         public async Task<IActionResult> All()
         {
-            return Ok(_trabajador.GetAll());
+            return Ok(_mapper.Map<IList<TrabajadorResponseDto>>(_trabajador.GetAll()));
         }
         [HttpGet]
         [Route("ById")]
@@ -34,33 +38,29 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(trabajador);
+            return Ok(_mapper.Map<TrabajadorResponseDto>(trabajador));
         }
         [HttpPost]
-        public async Task<IActionResult> Crear(Trabajador trabajador)
+        public async Task<IActionResult> Crear(TrabajadorRequestDto trabajadorRequestDto)
         {
             if (!ModelState.IsValid){return BadRequest();}
+            var trabajador = _mapper.Map<Trabajador>(trabajadorRequestDto);
             _trabajador.Save(trabajador);
             return Ok(trabajador.Id);
         }
         [HttpPut]
-        public async Task<IActionResult> Editar(int? Id, Trabajador trabajador)
+        public async Task<IActionResult> Editar(int? Id, TrabajadorRequestDto trabajadorRequestDto)
         {
-            if(!Id.HasValue){return BadRequest();}
-            if(!ModelState.IsValid){return BadRequest(ModelState);}
+            if (!Id.HasValue)
+            { return BadRequest(); }
+            if (!ModelState.IsValid)
+            { return BadRequest(); }
             Trabajador trabajadorBack = _trabajador.GetById(Id.Value);
-            if(trabajadorBack is null){return NotFound();}
-            trabajadorBack.NombreCompleto = trabajador.NombreCompleto;
-            trabajadorBack.DNI = trabajador.DNI;
-            trabajadorBack.FechaNacimiento = trabajador.FechaNacimiento;
-            trabajadorBack.Cargo = trabajador.Cargo;
-            trabajadorBack.TipoContrato = trabajador.TipoContrato;
-            trabajadorBack.FechaIngreso = trabajador.FechaIngreso;
-            trabajadorBack.SueldoMensual = trabajador.SueldoMensual;
-            trabajadorBack.ViveEnLaPropiedad = trabajador.ViveEnLaPropiedad;
-            trabajadorBack.PropiedadAgricolaId = trabajador.PropiedadAgricolaId;
+            if (trabajadorBack is null)
+            { return NotFound(); }
+            trabajadorBack = _mapper.Map<Trabajador>(trabajadorRequestDto);
             _trabajador.Save(trabajadorBack);
-            return Ok(trabajadorBack);
+            return Ok();
         }
         [HttpDelete]
         public async Task<IActionResult> Borrar(int? Id)

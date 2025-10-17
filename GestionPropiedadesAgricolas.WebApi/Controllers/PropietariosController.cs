@@ -1,4 +1,6 @@
-﻿using GestionPropiedadesAgricolas.Application;
+﻿using AutoMapper;
+using GestionPropiedadesAgricolas.Application;
+using GestionPropiedadesAgricolas.Application.Dtos.Propietario;
 using GestionPropiedadesAgricolas.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,16 +12,18 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
     {
         private readonly ILogger<PropietariosController> _logger;
         private readonly IApplication<Propietario> _propietario;
-        public PropietariosController(ILogger<PropietariosController> logger, IApplication<Propietario> propietario)
+        private readonly IMapper _mapper;
+        public PropietariosController(ILogger<PropietariosController> logger, IApplication<Propietario> propietario, IMapper mapper)
         {
             _logger = logger;
             _propietario = propietario;
+            _mapper = mapper;
         }
         [HttpGet]
         [Route("All")]
         public async Task<IActionResult> All()
         {
-            return Ok(_propietario.GetAll());
+            return Ok(_mapper.Map<IList<PropietarioResponseDto>>(_propietario.GetAll()));
         }
         [HttpGet]
         [Route("ById")]
@@ -34,30 +38,32 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(propietario);
+            return Ok(_mapper.Map<PropietarioResponseDto>(propietario));
         }
         [HttpPost]
-        public async Task<IActionResult> Crear(Propietario propietario)
+        public async Task<IActionResult> Crear(PropietarioRequestDto propietarioRequestDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var propietario = _mapper.Map<Propietario>(propietarioRequestDto);
             _propietario.Save(propietario);
             return Ok(propietario.Id);
         }
         [HttpPut]
-        public async Task<IActionResult> Editar(int? Id, Propietario propietario)
+        public async Task<IActionResult> Editar(int? Id, PropietarioRequestDto propietarioRequestDto)
         {
-            if (!Id.HasValue){return BadRequest();}
-            if (!ModelState.IsValid){return BadRequest(ModelState);}
+            if (!Id.HasValue)
+            { return BadRequest(); }
+            if (!ModelState.IsValid)
+            { return BadRequest(); }
             Propietario propietarioBack = _propietario.GetById(Id.Value);
-            if (propietarioBack is null){return NotFound();}
-            propietarioBack.NombreCompleto = propietario.NombreCompleto;
-            propietarioBack.TipoEntidad = propietario.TipoEntidad;
-            propietarioBack.CUIT = propietario.CUIT;
+            if (propietarioBack is null)
+            { return NotFound(); }
+            propietarioBack = _mapper.Map<Propietario>(propietarioRequestDto);
             _propietario.Save(propietarioBack);
-            return Ok(propietarioBack);
+            return Ok();
         }
         [HttpDelete]
         public async Task<IActionResult> Borrar(int? Id)
