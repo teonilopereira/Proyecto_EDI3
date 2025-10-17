@@ -58,8 +58,8 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             propiedadBack.TipoSuelo = propiedadAgricola.TipoSuelo;
             propiedadBack.FechaAdquisicion = propiedadAgricola.FechaAdquisicion;
             propiedadBack.Estado = propiedadAgricola.Estado;
-            propiedadBack.IdPropietario = propiedadAgricola.IdPropietario;
-            propiedadBack.IdUbicacion = propiedadAgricola.IdUbicacion;
+            propiedadBack.PropietarioId = propiedadAgricola.PropietarioId;
+            propiedadBack.UbicacionId = propiedadAgricola.UbicacionId;
             _propiedadAgricola.Save(propiedadBack);
             return Ok(propiedadBack);
         }

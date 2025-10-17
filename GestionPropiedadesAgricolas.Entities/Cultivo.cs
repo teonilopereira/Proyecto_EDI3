@@ -20,7 +20,6 @@ namespace GestionPropiedadesAgricolas.Entities
 
         [StringLength(50)]
         public string Especie { get; set; }
-
         [StringLength(50)]
         public string? Variedad { get; set; }
 
