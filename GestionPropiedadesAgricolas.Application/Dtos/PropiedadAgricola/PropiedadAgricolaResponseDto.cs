@@ -15,7 +15,7 @@ namespace GestionPropiedadesAgricolas.Application.Dtos.PropiedadAgricola
         public string TipoSuelo { get; set; }
         public DateTime? FechaAdquisicion { get; set; }
         public string Estado { get; set; }
-        public int IdPropietario { get; set; }
-        public int IdUbicacion { get; set; }
+        public int PropietarioId { get; set; }
+        public int UbicacionId { get; set; }
     }
 }
