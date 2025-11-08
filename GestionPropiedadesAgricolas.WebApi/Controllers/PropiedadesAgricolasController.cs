@@ -2,11 +2,14 @@ using AutoMapper;
 using GestionPropiedadesAgricolas.Application;
 using GestionPropiedadesAgricolas.Application.Dtos.PropiedadAgricola;
 using GestionPropiedadesAgricolas.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestionPropiedadesAgricolas.WebApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class PropiedadesAgricolasController : ControllerBase

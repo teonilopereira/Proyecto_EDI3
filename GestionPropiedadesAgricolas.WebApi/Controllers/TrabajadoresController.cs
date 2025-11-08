@@ -2,28 +2,43 @@
 using GestionPropiedadesAgricolas.Application;
 using GestionPropiedadesAgricolas.Application.Dtos.Trabajador;
 using GestionPropiedadesAgricolas.Entities;
+using GestionPropiedadesAgricolas.Entities.MicrosoftIdentity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestionPropiedadesAgricolas.WebApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class TrabajadoresController : ControllerBase
     {
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<TrabajadoresController> _logger;
         private readonly IApplication<Trabajador> _trabajador;
         private readonly IMapper _mapper;
-        public TrabajadoresController(ILogger<TrabajadoresController> logger, IApplication<Trabajador> trabajador, IMapper mapper)
+        public TrabajadoresController(ILogger<TrabajadoresController> logger,UserManager<User>userManager, IApplication<Trabajador> trabajador, IMapper mapper)
         {
             _logger = logger;
             _trabajador = trabajador;
             _mapper = mapper;
+            _userManager = userManager;
         }
         [HttpGet]
         [Route("All")]
         public async Task<IActionResult> All()
         {
-            return Ok(_mapper.Map<IList<TrabajadorResponseDto>>(_trabajador.GetAll()));
+            var id = User.FindFirst("Id").Value.ToString();
+            var user = _userManager.FindByIdAsync(id).Result;
+            if (_userManager.IsInRoleAsync(user, "Administrador").Result)
+            {
+                var name = User.FindFirst("name");
+                var a = User.Claims;
+                return Ok(_mapper.Map<IList<TrabajadorResponseDto>>(_trabajador.GetAll()));
+            }
+            return Unauthorized();
         }
         [HttpGet]
         [Route("ById")]

@@ -9,7 +9,6 @@ namespace GestionPropiedadesAgricolas.Entities
         public PropiedadAgricola()
         {
             ProveedoresPorPropiedadesAgricolas=new HashSet<ProveedorPorPropiedadAgricola>();
-            UsuariosPorPropiedadAgricolas =new HashSet<UsuarioPorPropiedadAgricola>();
             Parcelas = new HashSet<Parcela>();
             Trabajadores = new HashSet<Trabajador>();
         }
@@ -36,7 +35,6 @@ namespace GestionPropiedadesAgricolas.Entities
         public int UbicacionId { get; set; }
         public virtual Ubicacion Ubicacion { get; set; }
         public virtual ICollection<ProveedorPorPropiedadAgricola> ProveedoresPorPropiedadesAgricolas { get; set; }
-        public virtual ICollection<UsuarioPorPropiedadAgricola> UsuariosPorPropiedadAgricolas { get; set; }
         public virtual ICollection<Parcela> Parcelas { get; set; }
         public virtual ICollection<Trabajador> Trabajadores { get; set; }
 

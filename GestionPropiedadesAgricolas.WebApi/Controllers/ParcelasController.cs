@@ -2,10 +2,13 @@
 using GestionPropiedadesAgricolas.Application;
 using GestionPropiedadesAgricolas.Application.Dtos.Parcela;
 using GestionPropiedadesAgricolas.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestionPropiedadesAgricolas.WebApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[controller]")]
     public class ParcelasController : ControllerBase
@@ -73,6 +76,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             {
                 return BadRequest();
             }
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             Parcela parcelaBack = _parcela.GetById(Id.Value);
             if (parcelaBack is null)
             {
