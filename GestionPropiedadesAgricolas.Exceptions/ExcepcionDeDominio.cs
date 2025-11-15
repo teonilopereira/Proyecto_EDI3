@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestionPropiedadesAgricolas.Exceptions
+{
+    public class ExcepcionDeDominio: Exception
+    {
+        public ExcepcionDeDominio(string mensaje) : base(mensaje)
+        {
+        }
+    }
+}

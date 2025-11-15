@@ -65,7 +65,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = false,
         ValidateAudience = false,
         RequireExpirationTime = false,
-        ValidateLifetime = true
+        ValidateLifetime = true,
     };
 });
 builder.Services.AddIdentity<User, Role>(
@@ -81,6 +81,7 @@ builder.Services.AddScoped(typeof(IStringServices), typeof(StringServices));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(IApplication<>), typeof(Application<>));
 builder.Services.AddScoped(typeof(IDbContext<>), typeof(DbContext<>));
+builder.Services.AddScoped(typeof(ITokenHandlerService), typeof(TokenHandlerService));
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

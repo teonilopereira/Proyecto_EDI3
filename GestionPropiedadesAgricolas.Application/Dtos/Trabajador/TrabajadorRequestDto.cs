@@ -12,9 +12,13 @@ namespace GestionPropiedadesAgricolas.Application.Dtos.Trabajador
     {
         public int Id { get; set; }
         [StringLength(100)]
-        public string NombreCompleto { get; set; }
+        public string Nombre { get; set; }
+        [StringLength(30)]
+        public string Apellido { get;  set; }
         [StringLength(10)]
         public string DNI { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string Email { get;  set; }
         [DataType(DataType.Date)]
         public DateTime FechaNacimiento { get; set; }
         [StringLength(50)]

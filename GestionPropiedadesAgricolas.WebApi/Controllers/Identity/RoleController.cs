@@ -26,20 +26,24 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
         }
         [HttpGet]
         [Route("GetAll")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(_mapper.Map<IList<RoleResponseDto>>(_roleManager.Roles.ToList()));
         }
         [HttpPost]
         [Route("Create")]
+        [Authorize(Roles ="Administrador")]
         public IActionResult Guardar(RoleRequestDto roleRequestDto)
         {
+
             if (ModelState.IsValid)
             {
                 var userId = Guid.Parse(User.FindFirst("Id")?.Value);
                 try
                 {
                     var role = _mapper.Map<Role>(roleRequestDto);
+                    role.Id = Guid.NewGuid();
                     var result = _roleManager.CreateAsync(role).Result;
                     if (result.Succeeded)
                     {
@@ -61,6 +65,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
 
         [HttpPut]
         [Route("Update")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Modificar([FromBody] RoleRequestDto roleRequestDto, [FromQuery] Guid id)/*Falta */
         {
             if (ModelState.IsValid)
@@ -87,9 +92,9 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
                 return BadRequest("Los datos enviados no son validos.");
             }
         }
-
-        [Route("GetById")]
         [HttpGet]
+        [Route("GetById")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult GetById(Guid? id)
         {
             try

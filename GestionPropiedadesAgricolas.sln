@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
+VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionPropiedadesAgricolas.Abstactions", "GestionPropiedadesAgricolas.Abstactions\GestionPropiedadesAgricolas.Abstactions.csproj", "{F5FA3B45-733C-4B3D-A782-9D8C36A0029F}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionPropiedadesAgricolas.Services", "GestionPropiedadesAgricolas.Services\GestionPropiedadesAgricolas.Services.csproj", "{F83B6D30-2120-4B7F-8E80-7BF073CFC94C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionPropiedadesAgricolas.WebApi", "GestionPropiedadesAgricolas.WebApi\GestionPropiedadesAgricolas.WebApi.csproj", "{E5F6AEC5-7878-418C-BCDF-C8E7507644C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionPropiedadesAgricolas.Exceptions", "GestionPropiedadesAgricolas.Exceptions\GestionPropiedadesAgricolas.Exceptions.csproj", "{83D34169-AD9F-4CC1-A665-445C3622C915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{E5F6AEC5-7878-418C-BCDF-C8E7507644C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5F6AEC5-7878-418C-BCDF-C8E7507644C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5F6AEC5-7878-418C-BCDF-C8E7507644C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D34169-AD9F-4CC1-A665-445C3622C915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D34169-AD9F-4CC1-A665-445C3622C915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D34169-AD9F-4CC1-A665-445C3622C915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D34169-AD9F-4CC1-A665-445C3622C915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

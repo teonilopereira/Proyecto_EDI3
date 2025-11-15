@@ -13,6 +13,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GestionPropiedadesAgricolas.Abstactions\GestionPropiedadesAgricolas.Abstactions.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Application\GestionPropiedadesAgricolas.Application.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.DataAccess\GestionPropiedadesAgricolas.DataAccess.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Entities\GestionPropiedadesAgricolas.Entities.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Exceptions\GestionPropiedadesAgricolas.Exceptions.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Repository\GestionPropiedadesAgricolas.Repository.csproj" />
   </ItemGroup>
 
 </Project>

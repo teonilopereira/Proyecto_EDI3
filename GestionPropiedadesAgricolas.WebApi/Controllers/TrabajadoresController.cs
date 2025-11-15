@@ -28,20 +28,14 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
         }
         [HttpGet]
         [Route("All")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> All()
         {
-            var id = User.FindFirst("Id").Value.ToString();
-            var user = _userManager.FindByIdAsync(id).Result;
-            if (_userManager.IsInRoleAsync(user, "Administrador").Result)
-            {
-                var name = User.FindFirst("name");
-                var a = User.Claims;
                 return Ok(_mapper.Map<IList<TrabajadorResponseDto>>(_trabajador.GetAll()));
-            }
-            return Unauthorized();
         }
         [HttpGet]
         [Route("ById")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> ById(int? Id)
         {
             if (!Id.HasValue)
@@ -56,6 +50,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok(_mapper.Map<TrabajadorResponseDto>(trabajador));
         }
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Crear(TrabajadorRequestDto trabajadorRequestDto)
         {
             if (!ModelState.IsValid){return BadRequest();}
@@ -64,6 +59,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok(trabajador.Id);
         }
         [HttpPut]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Editar(int? Id, TrabajadorRequestDto trabajadorRequestDto)
         {
             if (!Id.HasValue)
@@ -78,6 +74,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok();
         }
         [HttpDelete]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Borrar(int? Id)
         {
             if (!Id.HasValue){return BadRequest();}

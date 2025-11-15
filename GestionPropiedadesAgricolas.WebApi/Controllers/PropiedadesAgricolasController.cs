@@ -26,12 +26,14 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
         }
         [HttpGet]
         [Route("All")]
+        [Authorize(Roles = "Administrador,Usuario,Productor")]
         public async Task<IActionResult> All()
         {
             return Ok(_mapper.Map<IList<PropiedadAgricolaResponseDto>>(_propiedadAgricola.GetAll()));
         }
         [HttpGet]
         [Route("ById")]
+        [Authorize(Roles = "Administrador,,Productor")]
         public async Task<IActionResult> ById(int? Id)
         {
             if (!Id.HasValue)
@@ -46,6 +48,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok(_mapper.Map<PropiedadAgricolaResponseDto>(propiedadAgricola));
         }
         [HttpPost]
+        [Authorize(Roles = "Administrador,Productor")]
         public async Task<IActionResult> Crear(PropiedadAgricolaRequestDto propiedadAgricolaRequestDto)
         {
             if (!ModelState.IsValid)
@@ -55,6 +58,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok(propiedadAgricola.Id);
         }
         [HttpPut]
+        [Authorize(Roles = "Administrador,Productor")]
         public async Task<IActionResult> Editar(int? Id, PropiedadAgricolaRequestDto propiedadAgricolaRequestDto)
         {
             if (!Id.HasValue)
@@ -69,6 +73,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok();
         }
         [HttpDelete]
+        [Authorize(Roles = "Administrador,Productor")]
         public async Task<IActionResult> Borrar(int? Id)
         {
             if (!Id.HasValue){ return BadRequest();}

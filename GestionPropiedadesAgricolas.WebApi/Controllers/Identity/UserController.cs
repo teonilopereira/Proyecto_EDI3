@@ -25,6 +25,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
 
         [HttpPost]
         [Route("AddRoleToUser")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Guardar(string userId, string roleId)
         {
             var user = _userManager.FindByIdAsync(userId).Result;

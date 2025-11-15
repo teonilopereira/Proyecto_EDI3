@@ -14,11 +14,11 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<TrabajadoresController> _logger;
+        private readonly ILogger<AuthController> _logger;
         private readonly ITokenHandlerService _servicioToken;
         public AuthController(
             UserManager<User> userManager
-                        , ILogger<TrabajadoresController> logger
+            , ILogger<AuthController> logger
             , ITokenHandlerService servicioToken)
         {
             _userManager = userManager;
@@ -54,6 +54,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
                         UserName = user.Email.Substring(0, user.Email.IndexOf('@'))
                     });
                 }
+
                 else
                 {
                     return BadRequest(Creado.Errors.Select(e => e.Description).ToList());
@@ -106,8 +107,6 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
             }
         }
 
-
-
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
@@ -123,12 +122,14 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
                     {
                         try
                         {
+                            var roles = await _userManager.GetRolesAsync(existeUsuario);
                             var parametros = new TokenParameters()
                             {
                                 Id = existeUsuario.Id.ToString(),
                                 PaswordHash = existeUsuario.PasswordHash,
                                 UserName = existeUsuario.UserName,
-                                Email = existeUsuario.Email
+                                Email = existeUsuario.Email,
+                                Roles = roles
                             };
                             var jwt = _servicioToken.GenerateJwtTokens(parametros);
                             return Ok(new LoginUserResponseDto()
@@ -156,7 +157,6 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers.Identity
                     }
             });
         }
-
     }
 }
 
