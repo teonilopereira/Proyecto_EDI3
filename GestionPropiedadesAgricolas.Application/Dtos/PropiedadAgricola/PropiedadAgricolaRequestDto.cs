@@ -19,7 +19,7 @@ namespace GestionPropiedadesAgricolas.Application.Dtos.PropiedadAgricola
         public DateTime? FechaAdquisicion { get; set; }
         [StringLength(20)]
         public string Estado { get; set; }
-        public int IdPropietarioId { get; set; }
+        public int PropietarioId { get; set; }
         public int UbicacionId { get; set; }
     }
 }

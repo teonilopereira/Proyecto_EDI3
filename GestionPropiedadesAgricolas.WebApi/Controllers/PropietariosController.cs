@@ -2,78 +2,110 @@
 using GestionPropiedadesAgricolas.Application;
 using GestionPropiedadesAgricolas.Application.Dtos.Propietario;
 using GestionPropiedadesAgricolas.Entities;
+using GestionPropiedadesAgricolas.Entities.MicrosoftIdentity;
+using GestionPropiedadesAgricolas.Exceptions;
+using GestionPropiedadesAgricolas.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 namespace GestionPropiedadesAgricolas.WebApi.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class PropietariosController : ControllerBase
-    {
-        private readonly ILogger<PropietariosController> _logger;
-        private readonly IApplication<Propietario> _propietario;
-        private readonly IMapper _mapper;
-        public PropietariosController(ILogger<PropietariosController> logger, IApplication<Propietario> propietario, IMapper mapper)
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Route("api/[controller]")]
+        [ApiController]
+        public class PropietariosController : ControllerBase
         {
-            _logger = logger;
-            _propietario = propietario;
-            _mapper = mapper;
-        }
-        [HttpGet]
-        [Route("All")]
-        public async Task<IActionResult> All()
-        {
-            return Ok(_mapper.Map<IList<PropietarioResponseDto>>(_propietario.GetAll()));
-        }
-        [HttpGet]
-        [Route("ById")]
-        public async Task<IActionResult> ById(int? Id)
-        {
-            if (!Id.HasValue)
+            private readonly UserManager<User> _userManager;
+            private readonly ILogger<PropietariosController> _logger;
+            private readonly IApplication<Propietario> _propietario;
+            private readonly IMapper _mapper;
+
+            public PropietariosController(
+                ILogger<PropietariosController> logger,
+                UserManager<User> userManager,
+                IApplication<Propietario> propietario,
+                IMapper mapper)
             {
-                return BadRequest();
+                _logger = logger;
+                _userManager = userManager;
+                _propietario = propietario;
+                _mapper = mapper;
             }
-            Propietario propietario = _propietario.GetById(Id.Value);
-            if (propietario is null)
+            [HttpGet]
+            [Route("All")]
+            [Authorize(Roles = "Administrador ")]
+            public async Task<IActionResult> All()
             {
-                return NotFound();
+
+                    var lista = _propietario.GetAll();
+                    return Ok(_mapper.Map<IList<PropietarioResponseDto>>(lista));
+
             }
-            return Ok(_mapper.Map<PropietarioResponseDto>(propietario));
-        }
-        [HttpPost]
-        public async Task<IActionResult> Crear(PropietarioRequestDto propietarioRequestDto)
-        {
-            if (!ModelState.IsValid)
+            [HttpGet]
+            [Route("ById")]
+            [Authorize(Roles = "Administrador")]
+            public IActionResult ById(int? Id)
             {
-                return BadRequest(ModelState);
+                if (!Id.HasValue)
+                    return BadRequest();
+
+                var propietario = _propietario.GetById(Id.Value);
+                if (propietario is null)
+                    return NotFound();
+
+                return Ok(_mapper.Map<PropietarioResponseDto>(propietario));
             }
-            var propietario = _mapper.Map<Propietario>(propietarioRequestDto);
-            _propietario.Save(propietario);
-            return Ok(propietario.Id);
-        }
-        [HttpPut]
-        public async Task<IActionResult> Editar(int? Id, PropietarioRequestDto propietarioRequestDto)
-        {
-            if (!Id.HasValue)
-            { return BadRequest(); }
-            if (!ModelState.IsValid)
-            { return BadRequest(); }
-            Propietario propietarioBack = _propietario.GetById(Id.Value);
-            if (propietarioBack is null)
-            { return NotFound(); }
-            propietarioBack = _mapper.Map<Propietario>(propietarioRequestDto);
-            _propietario.Save(propietarioBack);
-            return Ok();
-        }
-        [HttpDelete]
-        public async Task<IActionResult> Borrar(int? Id)
-        {
-            if (!Id.HasValue){return BadRequest();}
-            Propietario propietarioBack = _propietario.GetById(Id.Value);
-            if (propietarioBack is null){return NotFound();}
-            _propietario.Delete(propietarioBack.Id);
-            return Ok();
+            [HttpPost]
+            [Authorize(Roles = "Administrador")]
+            public IActionResult Crear([FromBody] PropietarioRequestDto propietarioDto)
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var propietario = _mapper.Map<Propietario>(propietarioDto);
+
+                _propietario.Save(propietario);
+
+                return Ok(propietario.Id);
+            }
+            [HttpPut]
+            [Authorize(Roles = "Administrador")]
+            public IActionResult Editar(int? Id, [FromBody] PropietarioRequestDto propietarioDto)
+            {
+                if (!Id.HasValue)
+                    return BadRequest();
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var propietarioBack = _propietario.GetById(Id.Value);
+                if (propietarioBack is null)
+                    return NotFound();
+
+                propietarioBack = _mapper.Map<Propietario>(propietarioDto);
+                propietarioBack.Id = Id.Value;
+
+                _propietario.Save(propietarioBack);
+
+                return Ok();
+            }
+            [HttpDelete]
+            [Authorize(Roles = "Administrador")]
+            public IActionResult Borrar(int? Id)
+            {
+                if (!Id.HasValue)
+                    return BadRequest();
+
+                var propietario = _propietario.GetById(Id.Value);
+                if (propietario is null)
+                    return NotFound();
+
+                _propietario.Delete(propietario.Id);
+
+                return Ok();
+            }
         }
     }
 
-}

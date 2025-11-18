@@ -2,10 +2,13 @@
 using GestionPropiedadesAgricolas.Application;
 using GestionPropiedadesAgricolas.Application.Dtos.Parcela;
 using GestionPropiedadesAgricolas.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestionPropiedadesAgricolas.WebApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[controller]")]
     public class ParcelasController : ControllerBase
@@ -21,12 +24,14 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
         }
         [HttpGet]
         [Route("All")]
+        [Authorize(Roles = "Administrador,Usuario")]
         public async Task<IActionResult> All()
         {
             return Ok(_mapper.Map<IList<ParcelaResponseDto>>(_parcela.GetAll()));
         }
         [HttpGet]
         [Route("ById")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> ById(int? Id)
         {
             if (!Id.HasValue)
@@ -42,6 +47,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok(_mapper.Map<ParcelaResponseDto>(parcela));
         }
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Crear(ParcelaRequestDto parcelaRequestDto)
         {
             if (!ModelState.IsValid)
@@ -53,6 +59,7 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok(parcela.Id);
         }
         [HttpPut]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Editar(int? Id, ParcelaRequestDto parcelaRequestDto)
         {
             if (!Id.HasValue)
@@ -67,12 +74,14 @@ namespace GestionPropiedadesAgricolas.WebApi.Controllers
             return Ok();
         }
         [HttpDelete]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Borrar(int? Id)
         {
             if (!Id.HasValue)
             {
                 return BadRequest();
             }
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
             Parcela parcelaBack = _parcela.GetById(Id.Value);
             if (parcelaBack is null)
             {

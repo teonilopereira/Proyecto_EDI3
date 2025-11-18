@@ -7,8 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+	  <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.6" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Abstactions\GestionPropiedadesAgricolas.Abstactions.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Application\GestionPropiedadesAgricolas.Application.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.DataAccess\GestionPropiedadesAgricolas.DataAccess.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Entities\GestionPropiedadesAgricolas.Entities.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Exceptions\GestionPropiedadesAgricolas.Exceptions.csproj" />
+    <ProjectReference Include="..\GestionPropiedadesAgricolas.Repository\GestionPropiedadesAgricolas.Repository.csproj" />
   </ItemGroup>
 
 </Project>

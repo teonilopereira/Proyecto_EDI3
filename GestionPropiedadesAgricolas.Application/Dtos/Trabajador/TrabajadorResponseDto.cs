@@ -11,8 +11,10 @@ namespace GestionPropiedadesAgricolas.Application.Dtos.Trabajador
     public class TrabajadorResponseDto
     {
         public int Id { get; set; }
-        public string NombreCompleto { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get;  set; }
         public string DNI { get; set; }
+        public string Email { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string Cargo { get; set; }
         public string TipoContrato { get; set; }
